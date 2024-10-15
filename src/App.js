@@ -6,7 +6,7 @@ function App() {
   const [itemQuantity, setItemQuantity] = useState(0);
   const [itemStatus, setItemStatus] = useState('In Stock');
   const [items, setItems] = useState([]);
-
+  const [searchTerm, setSearchTerm] = useState('');
   // Fetch items when the app loads
   useEffect(() => {
     const fetchItems = async () => {
@@ -41,7 +41,14 @@ function App() {
     const updatedItems = await getItems();
     setItems(updatedItems);
   };
-
+  
+  const  handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    };
+    
+  const filteredItems = items.filter(item =>
+  item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="App">
       <h1>Household Items</h1>
@@ -57,6 +64,12 @@ function App() {
         onChange={ (e) => setItemQuantity(e.target.value)}
         placeholder="Enter item quantity"
       />
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Search for an item"
+        />
       <select
         value={itemStatus}
         onChange={(e) => setItemStatus(e.target.value)}
@@ -69,7 +82,7 @@ function App() {
 
       <h2>Items in Stock</h2>
       <ul>
-        {items.map(item => (
+        {filteredItems.map(item => (
           <div key={item.id}>
             <h3>{item.name}</h3>
             <p>Quantity: {item.quantity}</p>

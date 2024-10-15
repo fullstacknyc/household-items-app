@@ -7,6 +7,8 @@ function App() {
   const [itemStatus, setItemStatus] = useState('In Stock');
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState(''); // ('') no filter by default
+
   // Fetch items when the app loads
   useEffect(() => {
     const fetchItems = async () => {
@@ -45,10 +47,17 @@ function App() {
   const  handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     };
+  
+  //Update status filter for user
+  const handleStatusFilterChange = (e) => {
+    setStatusFilter(e.target.value)
+    };
     
-  const filteredItems = items.filter(item =>
-  item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredItems = items.filter(item =>
+  item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  (statusFilter === '' || item.status === statusFilter)
   );
+  
   return (
     <div className="App">
       <h1>Household Items</h1>
@@ -64,21 +73,24 @@ function App() {
         onChange={ (e) => setItemQuantity(e.target.value)}
         placeholder="Enter item quantity"
       />
+      
+      <button onClick={handleAddItem}>Add Item</button>
+      
+      <h2>Search for an item </h2>
       <input
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Search for an item"
         />
-      <select
-        value={itemStatus}
-        onChange={(e) => setItemStatus(e.target.value)}
-      >
+        
+      <h2>Filter by Status </h2>
+      <select value={statusFilter} onChange={handleStatusFilterChange}>
+        <option value="">All</option>
         <option value="In Stock">In Stock</option>
         <option value="Low">Low</option>
         <option value="Depleted">Depleted</option>
-      </select>
-      <button onClick={handleAddItem}>Add Item</button>
+        </select>
 
       <h2>Items in Stock</h2>
       <ul>

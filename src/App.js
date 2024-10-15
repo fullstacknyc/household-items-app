@@ -53,52 +53,54 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Household Items</h1>
-      {message && <p className="message">{message}</p>} {/* Display feedback messages */}
-      <input
-        type="text"
-        value={itemName}
-        onChange={(e) => setItemName(e.target.value)}
-        placeholder="Enter item name"
-      />
-      <input
-        type="number"
-        value={itemQuantity}
-        onChange={(e) => setItemQuantity(e.target.value)}
-        placeholder="Enter item quantity"
-      />
-      <button onClick={handleAddItem}>Add Item</button>
+  <div className="App">
+    <h1>Household Items</h1>
+    {message && <p className="message">{message}</p>} {/* Display feedback messages */}
+    <input
+      type="text"
+      value={itemName}
+      onChange={(e) => setItemName(e.target.value)}
+      placeholder="Enter item name"
+    />
+    <input
+      type="number"
+      value={itemQuantity}
+      onChange={(e) => setItemQuantity(e.target.value)}
+      placeholder="Enter item quantity"
+    />
+    <button onClick={handleAddItem}>Add Item</button>
 
-      {loading ? (
-        <p>Loading items...</p> 
-      ) : (
-        <>
-          <h2>Search for an item</h2>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search for an item"
-          />
+    {loading ? (
+      <p>Loading items...</p> 
+    ) : (
+      <>
+        <h2>Search for an item</h2>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for an item"
+        />
 
-          <h2>Items</h2>
-          <ul>
-            {items
-              .sort((a, b) => a.name.localeCompare(b.name)) // Sorting by item name
-              .map(item => (
-                <div key={item.id}>
-                  <h3>{item.name}</h3>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Status: {item.status}</p>
-                  <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
-                </div>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
-  );
-}
+        <h2>Items</h2>
+        <ul>
+          {items
+            .filter(item => 
+              item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filtering items based on search term
+            )
+            .sort((a, b) => a.name.localeCompare(b.name)) // Sorting by item name
+            .map(item => (
+              <div key={item.id}>
+                <h3>{item.name}</h3>
+                <p>Quantity: {item.quantity}</p>
+                <p>Status: {item.status}</p>
+                <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+              </div>
+          ))}
+        </ul>
+      </>
+    )}
+  </div>
+);
 
 export default App;

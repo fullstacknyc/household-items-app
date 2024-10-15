@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { addItem, getItems, updateItem, deleteItem } from './firestoreService'; // Make sure to import the new functions
+import { addItem, getItems, updateItem, deleteItem } from './firestoreService'; // Import functions for Firestore operations
 
 function App() {
-  const [itemName, setItemName] = useState('');
-  const [itemQuantity, setItemQuantity] = useState(0);
-  const [itemStatus, setItemStatus] = useState('In Stock');
-  const [items, setItems] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState(''); // ('') no filter by default
+  const [itemName, setItemName] = useState(''); // State for item name
+  const [itemQuantity, setItemQuantity] = useState(0); // State for item quantity
+  const [itemStatus, setItemStatus] = useState('In Stock'); // State for item status
+  const [items, setItems] = useState([]); // State for items list
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const [statusFilter, setStatusFilter] = useState(''); // State for status filter
 
   // Fetch items when the app loads
   useEffect(() => {
     const fetchItems = async () => {
-      const itemsList = await getItems();
-      setItems(itemsList);
+      try {
+        const itemsList = await getItems();
+        setItems(itemsList);
+      } catch (error) {
+        console.error("Error fetching items:", error); // Error handling for fetching items
+      }
     };
     fetchItems();
   }, []);
@@ -22,36 +26,49 @@ function App() {
   const handleAddItem = async () => {
     // Ensure item name is not empty
     if (!itemName) {
-      alert("Item name cannot be empty!");
+      alert("Item name cannot be empty!"); // Alert for empty item name
       return;
     }
-    
+
     // Set status based on quantity
     const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
 
-    await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
-    setItemName(''); // Clear the input
-    setItemQuantity(0); // Reset quantity
-    setItemStatus('In Stock'); // Reset status
-    const updatedItems = await getItems(); // Refresh item list
-    setItems(updatedItems);
+    try {
+      await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
+      setItemName(''); // Clear the input
+      setItemQuantity(0); // Reset quantity
+      setItemStatus('In Stock'); // Reset status
+      const updatedItems = await getItems(); // Refresh item list
+      setItems(updatedItems);
+    } catch (error) {
+      console.error("Error adding item:", error); // Error handling for adding item
+    }
   };
 
-  // Update item status based on quantity
+  // Update item status and quantity
   const handleUpdateStatus = async (itemId, newQuantity) => {
     const newStatus = newQuantity === 0 ? 'Depleted' : 'In Stock';
-    await updateItem(itemId, { quantity: newQuantity, status: newStatus }); // Ensure quantity and status are updated
-    const updatedItems = await getItems();
-    setItems(updatedItems);
+    try {
+      await updateItem(itemId, { quantity: newQuantity, status: newStatus });
+      const updatedItems = await getItems();
+      setItems(updatedItems);
+    } catch (error) {
+      console.error("Error updating item:", error); // Error handling for updating item
+    }
   };
 
   // Delete item
   const handleDeleteItem = async (itemId) => {
-    await deleteItem(itemId); // Ensure deleteItem is defined in firestoreService
-    const updatedItems = await getItems();
-    setItems(updatedItems);
+    try {
+      await deleteItem(itemId); // Delete the item
+      const updatedItems = await getItems();
+      setItems(updatedItems);
+    } catch (error) {
+      console.error("Error deleting item:", error); // Error handling for deleting item
+    }
   };
 
+  // Handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -61,6 +78,7 @@ function App() {
     setStatusFilter(e.target.value);
   };
 
+  // Filter items based on search term and status filter
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (statusFilter === '' || item.status === statusFilter)
@@ -107,7 +125,6 @@ function App() {
             <h3>{item.name}</h3>
             <p>Quantity: {item.quantity}</p>
             <p>Status: {item.status}</p>
-            {/* Edit and Delete Buttons */}
             <input
               type="number"
               value={item.quantity}

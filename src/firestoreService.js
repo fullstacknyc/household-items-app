@@ -25,12 +25,22 @@ export const getItems = async () => {
 
 //Function to update an item in Firestore
 export const updateItem = async (itemId, updatedData) => {
+  try {
   const itemRef = doc(db, 'items', itemId);
   await updateDoc(itemRef, updatedData);
+  console.log("Item updated successfully");
+  } catch (error) {
+    console.error("Error updating item: ", error);
+  }
 }
 
 //Function to delete an item from Firestore
 export const deleteItem = async (itemId) => {
+  try {
   const itemRef = doc(db, 'items', itemId);
   await deleteDoc(itemRef);
+  console.log("Item deleted successfully");
+} catch (error) {
+  console.error("Error deleting item: ", error);
+}
 }

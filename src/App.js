@@ -35,7 +35,7 @@ function App() {
   // Update item status based on quantity
   const handleUpdateStatus = async (itemId, newQuantity) => {
     // Automatically  update status to depleted if quantity is 0.
-    const newStatus = newQuantity === 0 ? 'Depleted : 'In Stock';
+    const newStatus = newQuantity === 0 ? 'Depleted' : 'In Stock';
     await updateItem(itemId, { status: newStatus }); // Ensure updateItem is defined in firestoreService
     const updatedItems = await getItems();
       setItems(updatedItems);

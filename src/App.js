@@ -3,6 +3,8 @@ import { addItem, getItems, updateItem, deleteItem } from './firestoreService'; 
 
 function App() {
   const [itemName, setItemName] = useState('');
+  const [itemQuantity, setItemQuantity] = useState(0);
+  const [itemStatus, setItemStatus] = useState('In Stock');
   const [items, setItems] = useState([]);
 
   // Fetch items when the app loads
@@ -16,9 +18,11 @@ function App() {
 
   // Handle adding a new item
   const handleAddItem = async () => {
-    if (itemName) {
-      await addItem({ name: itemName, status: 'In Stock' });
+    if (itemName && itemQuantity) {
+      await addItem({ name: itemName, quantity: itemQuantity, status: itemStatus });
       setItemName(''); // Clear the input
+      setItemQuantity(0); // Clear the Quantity
+      setItemStatus('In Stock'); // Set to In Stock
       const updatedItems = await getItems(); // Refresh item list
       setItems(updatedItems);
     }
@@ -47,16 +51,34 @@ function App() {
         onChange={(e) => setItemName(e.target.value)}
         placeholder="Enter item name"
       />
+      <input
+        type="number"
+        value={itemQuantity}
+        onChange={ (e) => setItemQuantity(e.target.value)}
+        placeholder="Enter item quantity"
+      />
+      <select
+        value={itemStatus}
+        onChange={(e) => setItemStatus(e.target.value)}
+      >
+        <option value="In Stock">In Stock</option>
+        <option value="Low">Low</option>
+        <option value="Depleted">Depleted</option>
+      </select>
       <button onClick={handleAddItem}>Add Item</button>
 
       <h2>Items in Stock</h2>
       <ul>
         {items.map(item => (
-          <li key={item.id}>
-            {item.name} - {item.status}
+          <div key={item.id}>
+            <h3>{item.name}</h3>
+            <p>Quantity: {item.quantity}</p>
+            <p>Status: {item.status}</p>
+            {/* Edit and Delete Buttons */}
             <button onClick={() => handleUpdateStatus(item.id, 'Low')}>Set Low</button>
+            <button onClick={() => handleUpdateStatus(item.id, 'Depleted')}>Set Depleted</button>
             <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
-          </li>
+          </div>
         ))}
       </ul>
     </div>

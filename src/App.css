@@ -1,110 +1,92 @@
-/* App.css */
-
-/* General Styling */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f7f7f7;
+/* Basic Reset */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* App Styles */
 .App {
-  text-align: center;
-  margin: 20px;
+  font-family: Arial, sans-serif; /* Change to a more readable font */
+  background-color: #f8f9fa; /* Light background for contrast */
+  color: #333; /* Dark text for readability */
+  max-width: 600px; /* Limit the width for mobile devices */
+  margin: 20px auto; /* Center the app on the page */
+  padding: 20px; /* Add padding for spacing */
+  border-radius: 8px; /* Round corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 /* Headings */
 h1 {
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 24px; /* Larger heading */
+  margin-bottom: 10px; /* Space below heading */
 }
 
 h2 {
-  color: #444;
-  margin-top: 40px;
+  font-size: 20px; /* Sub-heading size */
+  margin-top: 20px; /* Space above sub-heading */
+  margin-bottom: 10px; /* Space below sub-heading */
 }
 
-/* Item Form */
-input[type="text"], input[type="number"] {
-  padding: 10px;
-  margin: 10px 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  width: 200px;
+/* Input Fields */
+input[type="text"],
+input[type="number"] {
+  width: 100%; /* Full width for inputs */
+  padding: 10px; /* Padding inside inputs */
+  margin: 5px 0; /* Space around inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  border-radius: 4px; /* Rounded corners */
 }
 
+/* Button Styles */
 button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
-  margin-top: 10px;
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  padding: 10px; /* Padding for button */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
 button:hover {
-  background-color: #218838;
+  background-color: #0056b3; /* Darker color on hover */
+}
+
+/* List Items */
+ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+}
+
+div {
+  background-color: #fff; /* White background for items */
+  padding: 10px; /* Padding for item cards */
+  margin: 10px 0; /* Space between items */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
 }
 
 /* Feedback Messages */
 .message {
-  color: #155724;
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-}
-
-/* Loading */
-p {
-  font-size: 16px;
-  color: #555;
-}
-
-/* Item List */
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-ul div {
-  background-color: white;
-  margin: 10px 0;
-  padding: 15px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-
-/* Item Details */
-h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-p {
-  margin: 5px 0;
-  color: #666;
-}
-
-button {
-  background-color: #dc3545;
-}
-
-button:hover {
-  background-color: #c82333;
+  color: #28a745; /* Green color for success messages */
+  margin: 10px 0; /* Space above and below message */
 }
 
 /* Responsive Design */
 @media (max-width: 600px) {
-  input[type="text"], input[type="number"] {
-    width: 100%;
+  .App {
+    margin: 10px; /* Reduce margin on smaller screens */
+    padding: 10px; /* Reduce padding on smaller screens */
   }
 
-  ul div {
-    padding: 10px;
+  h1 {
+    font-size: 20px; /* Smaller heading for mobile */
+  }
+
+  h2 {
+    font-size: 18px; /* Smaller sub-heading for mobile */
   }
 }

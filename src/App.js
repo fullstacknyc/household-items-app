@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { addItem, getItems, updateItem, deleteItem } from './firestoreService'; // Make sure to import the new functions
 
@@ -24,9 +23,9 @@ function App() {
     if (itemName && itemQuantity >= 0) {
       // Automatically set status to depleted if quantity is 0
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
-      await addItem({ name: itemName, quantity: itemQuantity, status: itemStatus });
+      await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
       setItemName(''); // Clear the input
-      setItemQuantity(0); // Clear the Quantity
+      setItemQuantity(Number(e.target.value); // Clear the Quantity
       setItemStatus('In Stock'); // Set to In Stock
       const updatedItems = await getItems(); // Refresh item list
       setItems(updatedItems);
@@ -36,10 +35,10 @@ function App() {
   // Update item status based on quantity
   const handleUpdateStatus = async (itemId, newQuantity) => {
     // Automatically  update status to depleted if quantity is 0.
-    const newStatus = newQuantity === 0 'Depleted : 'In Stock';
+    const newStatus = newQuantity === 0 ? 'Depleted : 'In Stock';
     await updateItem(itemId, { status: newStatus }); // Ensure updateItem is defined in firestoreService
     const updatedItems = await getItems();
-    setItems(updatedItems);
+      setItems(updatedItems);
   };
 
   // Delete item

@@ -19,13 +19,13 @@ function App() {
   }, []);
 
   // Handle adding a new item
-  const handleAddItem = async () => {
+  const handleAddItem = async (e) => { // Added e parameter here
     if (itemName && itemQuantity >= 0) {
       // Automatically set status to depleted if quantity is 0
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
       await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
       setItemName(''); // Clear the input
-      setItemQuantity(Number(e.target.value); // Clear the Quantity
+      setItemQuantity(0); // Clear the Quantity (no need for e.target.value)
       setItemStatus('In Stock'); // Set to In Stock
       const updatedItems = await getItems(); // Refresh item list
       setItems(updatedItems);
@@ -34,11 +34,11 @@ function App() {
 
   // Update item status based on quantity
   const handleUpdateStatus = async (itemId, newQuantity) => {
-    // Automatically  update status to depleted if quantity is 0.
+    // Automatically update status to depleted if quantity is 0.
     const newStatus = newQuantity === 0 ? 'Depleted' : 'In Stock';
     await updateItem(itemId, { status: newStatus }); // Ensure updateItem is defined in firestoreService
     const updatedItems = await getItems();
-      setItems(updatedItems);
+    setItems(updatedItems);
   };
 
   // Delete item
@@ -47,21 +47,21 @@ function App() {
     const updatedItems = await getItems();
     setItems(updatedItems);
   };
-  
-  const  handleSearchChange = (e) => {
+
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    };
-  
-  //Update status filter for user
+  };
+
+  // Update status filter for user
   const handleStatusFilterChange = (e) => {
-    setStatusFilter(e.target.value)
-    };
-    
-    const filteredItems = items.filter(item =>
-  item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  (statusFilter === '' || item.status === statusFilter)
+    setStatusFilter(e.target.value);
+  };
+
+  const filteredItems = items.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (statusFilter === '' || item.status === statusFilter)
   );
-  
+
   return (
     <div className="App">
       <h1>Household Items</h1>
@@ -74,27 +74,27 @@ function App() {
       <input
         type="number"
         value={itemQuantity}
-        onChange={ (e) => setItemQuantity(e.target.value)}
+        onChange={(e) => setItemQuantity(Number(e.target.value))} // Ensure it's a number
         placeholder="Enter item quantity"
       />
-      
+
       <button onClick={handleAddItem}>Add Item</button>
-      
-      <h2>Search for an item </h2>
+
+      <h2>Search for an item</h2>
       <input
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Search for an item"
-        />
-        
-      <h2>Filter by Status </h2>
+      />
+
+      <h2>Filter by Status</h2>
       <select value={statusFilter} onChange={handleStatusFilterChange}>
         <option value="">All</option>
         <option value="In Stock">In Stock</option>
         <option value="Low">Low</option>
         <option value="Depleted">Depleted</option>
-        </select>
+      </select>
 
       <h2>Items in Stock</h2>
       <ul>

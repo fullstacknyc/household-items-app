@@ -20,7 +20,9 @@ function App() {
 
   // Handle adding a new item
   const handleAddItem = async () => {
-    if (itemName && itemQuantity) {
+    if (itemName && itemQuantity >= 0) {
+      // Automatically set status to depleted if quantity is 0
+      const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
       await addItem({ name: itemName, quantity: itemQuantity, status: itemStatus });
       setItemName(''); // Clear the input
       setItemQuantity(0); // Clear the Quantity
@@ -30,8 +32,10 @@ function App() {
     }
   };
 
-  // Update item status
-  const handleUpdateStatus = async (itemId, newStatus) => {
+  // Update item status based on quantity
+  const handleUpdateStatus = async (itemId, newQuantity) => {
+    // Automatically  update status to depleted if quantity is 0.
+    const newStatus = newQuantity === 0 'Depleted : 'In Stock';
     await updateItem(itemId, { status: newStatus }); // Ensure updateItem is defined in firestoreService
     const updatedItems = await getItems();
     setItems(updatedItems);

@@ -6,12 +6,13 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBjV05ExFc50dj_CE8H3_cfZocumKi28U" , // Ensure you use environment variables for security
-  authDomain: "household-items-app.firebaseapp.com" ,
-  projectId: "household-items-app" ,
-  storageBucket: "household-items-app.appspot.com" ,
-  messagingSenderId: "1:171173367576:web:375ad563903a8e0b02586d" ,
-  appId: "G-BQFWL73PM7" ,
+  apiKey: "A]zaSyBjV05ExFc50dj_CE8aH3_cfZocumKi28U",
+  authDomain: "household-items-app.firebaseapp.com",
+projectId: "household-items-app",
+storageBucket: "household-items-app.appspot.com",
+messagingSenderId: "171173367576",
+appId: "1:171173367576:web:375ad563903a8e0b02586d" ,
+measurementId: "G-BQFWL73PM7"
 };
 
 // Initialize Firebase

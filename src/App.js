@@ -85,7 +85,10 @@ function App() {
           <h2>Items</h2>
           <ul>
             {items
-              .sort((a, b) => a.name.localeCompare(b.name)) // Sorting by item name
+              .filter(item => 
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filtering items based on search term
+              ) // Apply filter first
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sorting the filtered results by item name
               .map(item => (
                 <div key={item.id}>
                   <h3>{item.name}</h3>

@@ -22,6 +22,14 @@ function App() {
     fetchItems();
   }, []);
 
+  // Clear feedback message after 3 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [message]);
+
   const handleAddItem = async () => {
     if (itemName && itemQuantity >= 0) {
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
@@ -76,13 +84,15 @@ function App() {
 
           <h2>Items</h2>
           <ul>
-            {items.map(item => (
-              <div key={item.id}>
-                <h3>{item.name}</h3>
-                <p>Quantity: {item.quantity}</p>
-                <p>Status: {item.status}</p>
-                <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
-              </div>
+            {items
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sorting by item name
+              .map(item => (
+                <div key={item.id}>
+                  <h3>{item.name}</h3>
+                  <p>Quantity: {item.quantity}</p>
+                  <p>Status: {item.status}</p>
+                  <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+                </div>
             ))}
           </ul>
         </>

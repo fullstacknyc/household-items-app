@@ -105,12 +105,19 @@ function App() {
           <h2>Items</h2>
           <ul>
             {items
-              .filter(item =>
-                item.name.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map(item => (
-                <div key={item.id} className="item"> {/* Add className="item" */}
+  .filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (!statusFilter || item.status === statusFilter) // Apply status filter if selected
+  )
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .map(item => (
+    <div key={item.id}>
+      <h3>{item.name}</h3>
+      <p>Quantity: {item.quantity}</p>
+      <p>Status: {item.status}</p>
+      <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+    </div>
+  ))}
                   <h3>{item.name}</h3>
                   <p>Quantity: {item.quantity}</p>
                   <p>Status: {item.status}</p>

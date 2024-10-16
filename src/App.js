@@ -7,11 +7,12 @@ function App() {
   const [itemQuantity, setItemQuantity] = useState(0);
   const [itemStatus, setItemStatus] = useState('In Stock');
   const [items, setItems] = useState([]);
+  const [editingItemId, setEditingItemId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false); // Loading for actions
   const [message, setMessage] = useState('');
-  const [editingItemId, setEditingItemId] = useState(null); // New state for editing
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -30,26 +31,41 @@ function App() {
     }
   }, [message]);
 
-  const handleAddItem = async () => {
+  const handleAddOrEditItem = async () => {
     if (itemName && itemQuantity >= 0) {
+      setActionLoading(true);
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
+      let updatedItems = [...items];
+
       if (editingItemId) {
-        // Editing existing item
         await updateItem(editingItemId, { name: itemName, quantity: itemQuantity, status: statusToSet });
+        updatedItems = updatedItems.map(item =>
+          item.id === editingItemId ? { ...item, name: itemName, quantity: itemQuantity, status: statusToSet } : item
+        );
         setMessage('Item updated successfully!');
-        setEditingItemId(null); // Exit editing mode
+        setEditingItemId(null);
       } else {
-        // Adding new item
-        await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
+        const newItem = await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
+        updatedItems = [...updatedItems, newItem];
         setMessage('Item added successfully!');
       }
+
+      setItems(updatedItems);
       setItemName('');
       setItemQuantity(0);
       setItemStatus('In Stock');
-      const updatedItems = await getItems();
-      setItems(updatedItems);
+      setActionLoading(false);
     } else {
       setMessage('Please enter a valid item name and quantity.');
+    }
+  };
+
+  const handleDeleteItem = async (itemId) => {
+    const confirmDeletion = window.confirm('Are you sure you want to delete this item?');
+    if (confirmDeletion) {
+      await deleteItem(itemId);
+      setItems(items.filter(item => item.id !== itemId));
+      setMessage('Item deleted successfully.');
     }
   };
 
@@ -57,14 +73,7 @@ function App() {
     setItemName(item.name);
     setItemQuantity(item.quantity);
     setItemStatus(item.status);
-    setEditingItemId(item.id); // Set the item ID being edited
-  };
-
-  const handleDeleteItem = async (itemId) => {
-    await deleteItem(itemId);
-    const updatedItems = await getItems();
-    setItems(updatedItems);
-    setMessage('Item deleted successfully.');
+    setEditingItemId(item.id);
   };
 
   return (
@@ -91,8 +100,8 @@ function App() {
         <option value="Low">Low</option>
         <option value="Depleted">Depleted</option>
       </select>
-      <button onClick={handleAddItem}>
-        {editingItemId ? 'Save Changes' : 'Add Item'}
+      <button onClick={handleAddOrEditItem} disabled={actionLoading}>
+        {actionLoading ? 'Processing...' : editingItemId ? 'Save Changes' : 'Add Item'}
       </button>
 
       {loading ? (
@@ -106,7 +115,7 @@ function App() {
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search for an item"
           />
-          
+
           <h2>Filter by Status</h2>
           <select
             value={statusFilter}

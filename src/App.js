@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addItem, getItems, updateItem, deleteItem } from './firestoreService';
-import './App.css'; // Add CSS for styling
+import './App.css';
 
 function App() {
   const [itemName, setItemName] = useState('');
@@ -9,40 +9,55 @@ function App() {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
-  const [message, setMessage] = useState(''); // Feedback message
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [editingItemId, setEditingItemId] = useState(null); // New state for editing
 
   useEffect(() => {
     const fetchItems = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       const itemsList = await getItems();
       setItems(itemsList);
-      setLoading(false); // End loading
+      setLoading(false);
     };
     fetchItems();
   }, []);
 
-  // Clear feedback message after 3 seconds
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
-      return () => clearTimeout(timer); // Cleanup the timer
+      const timer = setTimeout(() => setMessage(''), 3000);
+      return () => clearTimeout(timer);
     }
   }, [message]);
 
   const handleAddItem = async () => {
     if (itemName && itemQuantity >= 0) {
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
-      await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
+      if (editingItemId) {
+        // Editing existing item
+        await updateItem(editingItemId, { name: itemName, quantity: itemQuantity, status: statusToSet });
+        setMessage('Item updated successfully!');
+        setEditingItemId(null); // Exit editing mode
+      } else {
+        // Adding new item
+        await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
+        setMessage('Item added successfully!');
+      }
       setItemName('');
       setItemQuantity(0);
       setItemStatus('In Stock');
       const updatedItems = await getItems();
       setItems(updatedItems);
-      setMessage('Item added successfully!'); // Success message
     } else {
       setMessage('Please enter a valid item name and quantity.');
     }
+  };
+
+  const handleEditItem = (item) => {
+    setItemName(item.name);
+    setItemQuantity(item.quantity);
+    setItemStatus(item.status);
+    setEditingItemId(item.id); // Set the item ID being edited
   };
 
   const handleDeleteItem = async (itemId) => {
@@ -55,7 +70,7 @@ function App() {
   return (
     <div className="App">
       <h1>Household Items</h1>
-      {message && <p className="message">{message}</p>} {/* Display feedback messages */}
+      {message && <p className="message">{message}</p>}
       <input
         type="text"
         value={itemName}
@@ -70,13 +85,15 @@ function App() {
       />
       <select
         value={itemStatus}
-        onChange={(e) => setItemStatus(e.target.value)} // Allow user to change status
+        onChange={(e) => setItemStatus(e.target.value)}
       >
         <option value="In Stock">In Stock</option>
         <option value="Low">Low</option>
         <option value="Depleted">Depleted</option>
       </select>
-      <button onClick={handleAddItem}>Add Item</button>
+      <button onClick={handleAddItem}>
+        {editingItemId ? 'Save Changes' : 'Add Item'}
+      </button>
 
       {loading ? (
         <p>Loading items...</p>
@@ -106,7 +123,7 @@ function App() {
             {items
               .filter(item =>
                 item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (!statusFilter || item.status === statusFilter) // Apply status filter if selected
+                (!statusFilter || item.status === statusFilter)
               )
               .sort((a, b) => a.name.localeCompare(b.name))
               .map(item => (
@@ -114,6 +131,7 @@ function App() {
                   <h3>{item.name}</h3>
                   <p>Quantity: {item.quantity}</p>
                   <p>Status: {item.status}</p>
+                  <button onClick={() => handleEditItem(item)}>Edit</button>
                   <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
                 </div>
               ))}

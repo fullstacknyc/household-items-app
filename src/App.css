@@ -90,3 +90,13 @@ div {
     font-size: 18px; /* Smaller sub-heading for mobile */
   }
 }
+
+/* Add fade-in animation to new items */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+div.item {
+  animation: fadeIn 0.5s ease-in-out;
+}

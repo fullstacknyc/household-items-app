@@ -8,7 +8,7 @@ function App() {
   const [itemStatus, setItemStatus] = useState('In Stock');
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState(''); 
+  const [statusFilter, setStatusFilter] = useState('');
   const [loading, setLoading] = useState(false); // Loading state
   const [message, setMessage] = useState(''); // Feedback message
 
@@ -34,10 +34,10 @@ function App() {
     if (itemName && itemQuantity >= 0) {
       const statusToSet = itemQuantity === 0 ? 'Depleted' : itemStatus;
       await addItem({ name: itemName, quantity: itemQuantity, status: statusToSet });
-      setItemName(''); 
+      setItemName('');
       setItemQuantity(0);
       setItemStatus('In Stock');
-      const updatedItems = await getItems(); 
+      const updatedItems = await getItems();
       setItems(updatedItems);
       setMessage('Item added successfully!'); // Success message
     } else {
@@ -68,10 +68,19 @@ function App() {
         onChange={(e) => setItemQuantity(e.target.value)}
         placeholder="Enter item quantity"
       />
+      <select
+        value={itemStatus}
+        onChange={(e) => setItemStatus(e.target.value)} // Allow user to change status
+      >
+        <option value="In Stock">In Stock</option>
+        <option value="Low">Low</option>
+        <option value="Depleted">Depleted</option>
+      </select>
       <button onClick={handleAddItem}>Add Item</button>
 
+
       {loading ? (
-        <p>Loading items...</p> 
+        <p>Loading items...</p>
       ) : (
         <>
           <h2>Search for an item</h2>
@@ -85,19 +94,20 @@ function App() {
           <h2>Items</h2>
           <ul>
             {items
-              .filter(item => 
-                item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filtering items based on search term
-              ) // Apply filter first
-              .sort((a, b) => a.name.localeCompare(b.name)) // Sorting the filtered results by item name
+              .filter(item =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .sort((a, b) => a.name.localeCompare(b.name))
               .map(item => (
-                <div key={item.id}>
+                <div key={item.id} className="item"> {/* Add className="item" */}
                   <h3>{item.name}</h3>
                   <p>Quantity: {item.quantity}</p>
                   <p>Status: {item.status}</p>
                   <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
                 </div>
-            ))}
+              ))}
           </ul>
+
         </>
       )}
     </div>

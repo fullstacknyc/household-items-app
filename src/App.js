@@ -90,6 +90,17 @@ function App() {
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search for an item"
           />
+          
+          <h2>Filter by Status</h2>
+<select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+>
+  <option value="">All</option>
+  <option value="In Stock">In Stock</option>
+  <option value="Low">Low</option>
+  <option value="Depleted">Depleted</option>
+</select>
 
           <h2>Items</h2>
           <ul>

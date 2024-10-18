@@ -148,6 +148,16 @@ select {
   border: 1px solid #ddd;
 }
 
+/* Grocery List Section */
+h2 {
+  margin-top: 2rem; /* Space above grocery list */
+}
+
+ul li {
+  background-color: #e9f7ef; /* Light green background for missing items */
+  border: 1px solid #c3e6cb; /* Slightly darker border */
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .App {

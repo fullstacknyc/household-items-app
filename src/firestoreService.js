@@ -6,12 +6,15 @@ import { db } from './firebaseConfig';
 // Function to add an item to Firestore
 export const addItem = async (item) => {
   try {
-    const docRef = await addDoc(collection(db, 'items'), item);
+    // Ensure the item has a status property
+    const statusToSet = item.quantity === 0 ? 'Missing' : 'In Stock';
+    const docRef = await addDoc(collection(db, 'items'), { ...item, status: statusToSet });
     console.log('Document written with ID: ', docRef.id);
   } catch (e) {
     console.error('Error adding document: ', e);
   }
 };
+
 
 // Function to get all items from Firestore
 export const getItems = async () => {
